@@ -5,6 +5,7 @@ export default function Posts() {
     <section className="flex flex-col">
       <div className="text-2xl">Posts</div>
       <PostCards />
+      <PostCards />
     </section>
   );
 }

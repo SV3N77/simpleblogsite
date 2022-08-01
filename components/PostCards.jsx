@@ -1,11 +1,16 @@
-import Image from "next/image";
+import Image from "next/future/image";
+
 export default function PostCards() {
   return (
-    <div className="mt-5 flex h-64 gap-5 rounded-md bg-amber-50 p-4 shadow-md">
-      <div className="relative aspect-[4/3] h-full">
-        <Image src="/images/MountFuji.png" alt="Mount Fuji" layout="fill" />
-      </div>
-      <div className="flex flex-col gap-3">
+    <div className="mt-5 flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
+      <Image
+        className="bg-cover"
+        src="/images/MountFuji.png"
+        alt="Mount Fuji"
+        width={400}
+        height={300}
+      />
+      <div className="flex flex-col gap-3 p-5">
         <div className="text-2xl">Title</div>
         <div className="grow">
           Lorem Ipsum is simply dummy text of the printing and typesetting
