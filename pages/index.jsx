@@ -22,7 +22,7 @@ export default function Home({ posts }) {
       </Head>
       <section className="container mx-auto flex flex-col gap-5 pt-8">
         <div className="text-2xl">Posts</div>
-        {posts.map((post) => (
+        {posts?.map((post) => (
           <PostCards key={post.id} post={post} />
         ))}
       </section>

@@ -13,4 +13,15 @@ export default function handler(req, res) {
       res.status(200).json(blogposts);
     }
   }
+
+  if (method === "POST") {
+    if (pathname === "/api/blogposts") {
+      const blogposts = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      const newPost = req.body;
+      newPost.id = Math.random().toString(36).slice(2);
+      blogposts.push(newPost);
+      fs.writeFileSync(filePath, JSON.stringify(blogposts));
+      res.status(200).json(newPost);
+    }
+  }
 }
