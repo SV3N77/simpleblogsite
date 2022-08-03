@@ -44,7 +44,7 @@ export default function PostForm() {
         <div className="text-md flex flex-col gap-3">
           <div className="aspect-[4/3]">
             <Image
-              src="/images/MountFuji.png"
+              src="/images/mount-fuji.png"
               alt="Mount Fuji"
               width={400}
               height={300}
