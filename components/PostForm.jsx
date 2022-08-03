@@ -2,6 +2,11 @@ import Image from "next/future/image";
 import Button from "./Button";
 
 export default function PostForm() {
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    console.log("submit");
+  }
   return (
     <form className="flex flex-col gap-10">
       <div className="flex gap-10">
@@ -37,7 +42,7 @@ export default function PostForm() {
           </div>
         </div>
         <div className="text-md flex flex-col gap-3">
-          <div className="relative aspect-[4/3]">
+          <div className="aspect-[4/3]">
             <Image
               src="/images/MountFuji.png"
               alt="Mount Fuji"
