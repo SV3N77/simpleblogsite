@@ -1,8 +1,10 @@
 import Image from "next/future/image";
 import { useState } from "react";
 import Button from "./Button";
+import { useRouter } from "next/router";
 
 export default function PostForm() {
+  const router = useRouter();
   const [currentImage, setCurrentImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
   // blog post data sent to api
@@ -30,6 +32,7 @@ export default function PostForm() {
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
     postBlogPost(data);
+    router.push("/");
   }
 
   return (
