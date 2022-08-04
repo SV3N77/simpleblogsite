@@ -5,11 +5,21 @@ import Button from "./Button";
 export default function PostForm() {
   const [currentImage, setCurrentImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
+  // blog post data sent to api
+  async function postBlogPost({ title, content }) {
+    const newBlogPost = {
+      title,
+      content,
+    };
+    await fetch("http://localhost:3000/api/blogposts", {
+      method: "POST",
+      body: JSON.stringify(newBlogPost),
+    });
+  }
 
   function handleImageChange(e) {
     if (e.target.files && e.target.files[0]) {
       const i = e.target.files[0];
-
       setCurrentImage(i);
       setCreateObjectURL(URL.createObjectURL(i));
     }
@@ -19,6 +29,7 @@ export default function PostForm() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
+    postBlogPost(data);
   }
 
   return (
