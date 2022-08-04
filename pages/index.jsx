@@ -1,5 +1,5 @@
 import Head from "next/head";
-import PostCards from "../components/PostCards";
+import PostCard from "../components/PostCard";
 
 export const getStaticProps = async () => {
   const data = await fetch("http://localhost:3000/api/blogposts", {
@@ -23,7 +23,7 @@ export default function Home({ posts }) {
       <section className="container mx-auto flex flex-col gap-5 pt-8">
         <div className="text-2xl">Posts</div>
         {posts?.map((post) => (
-          <PostCards key={post.id} post={post} />
+          <PostCard key={post.id} post={post} />
         ))}
       </section>
     </div>

@@ -1,14 +1,29 @@
 import Image from "next/future/image";
+import { useState } from "react";
 import Button from "./Button";
 
 export default function PostForm() {
+  const [currentImage, setCurrentImage] = useState(null);
+  const [createObjectURL, setCreateObjectURL] = useState(null);
+
+  function handleImageChange(e) {
+    if (e.target.files && e.target.files[0]) {
+      const i = e.target.files[0];
+
+      setCurrentImage(i);
+      setCreateObjectURL(URL.createObjectURL(i));
+    }
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
-
-    console.log("submit");
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    console.log(data);
   }
+
   return (
-    <form className="flex flex-col gap-10">
+    <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
       <div className="flex gap-10">
         <div className="flex grow flex-col gap-10">
           <div className="w-full px-3">
@@ -21,6 +36,7 @@ export default function PostForm() {
             <input
               className="w-full appearance-none rounded-md border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
               id="title"
+              name="title"
               type="text"
               placeholder="Title"
             />
@@ -35,6 +51,7 @@ export default function PostForm() {
             <textarea
               className="w-full resize-none appearance-none rounded-md border border-gray-200 bg-gray-200 py-3 px-4 leading-tight text-gray-700 focus:border-gray-500 focus:bg-white focus:outline-none"
               id="content"
+              name="content"
               type="text"
               rows={10}
               placeholder="Content"
@@ -42,19 +59,22 @@ export default function PostForm() {
           </div>
         </div>
         <div className="text-md flex flex-col gap-3">
-          <div className="aspect-[4/3]">
+          <div className="aspect-[4/3] bg-cover">
             <Image
-              src="/images/mount-fuji.png"
-              alt="Mount Fuji"
+              src={
+                createObjectURL ? createObjectURL : "/images/placeholder.png"
+              }
+              alt={currentImage ? currentImage.name : ""}
               width={400}
               height={300}
+              priority
             />
           </div>
           <div>
             <div className="font-bold uppercase tracking-wide text-gray-700">
               Select Image
             </div>
-            <input type="file" name="myImage" />
+            <input type="file" name="myImage" onChange={handleImageChange} />
           </div>
         </div>
       </div>

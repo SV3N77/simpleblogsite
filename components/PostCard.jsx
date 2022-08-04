@@ -1,8 +1,6 @@
 import Image from "next/future/image";
 
-export default function PostCards({ post }) {
-  const { title, content, image } = post;
-
+export default function PostCard({ post: { id, title, content, image } }) {
   return (
     <div className="flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
       <Image
