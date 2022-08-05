@@ -4,14 +4,16 @@ import Button from "./Button";
 export default function EditForm({ postId, title, content, image }) {
   return (
     <form className="flex h-80 overflow-hidden rounded-md bg-amber-50 shadow-md">
-      <Image
-        className="aspect-[4/3] bg-cover"
-        src={`/images/${image}`}
-        alt={image}
-        width={400}
-        height={300}
-        priority
-      />
+      {image ? (
+        <Image
+          className="aspect-[4/3] bg-cover"
+          src={`/images/${image}`}
+          alt={image}
+          width={400}
+          height={300}
+          priority
+        />
+      ) : null}
       <div className="flex w-full flex-col gap-2 p-5">
         <label
           className="mb-1 block text-xs font-bold uppercase tracking-wide text-gray-700"

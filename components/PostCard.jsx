@@ -14,14 +14,16 @@ export default function PostCard({ post: { id, title, content, image } }) {
     <EditForm postId={id} title={title} content={content} image={image} />
   ) : (
     <div className="relative flex h-80 overflow-hidden rounded-md bg-amber-50 shadow-md">
-      <Image
-        className="aspect-[4/3] bg-cover"
-        src={`/images/${image}`}
-        alt={image}
-        width={400}
-        height={300}
-        priority
-      />
+      {image ? (
+        <Image
+          className="aspect-[4/3] bg-cover"
+          src={`/images/${image}`}
+          alt={image}
+          width={400}
+          height={300}
+          priority
+        />
+      ) : null}
       <div className="flex flex-col gap-3 p-5">
         <div className="text-2xl">{title}</div>
         <div className="grow">{content}</div>
