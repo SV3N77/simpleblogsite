@@ -6,6 +6,12 @@ function classNames(...classes) {
 }
 
 export default function DropDown({ postid }) {
+  async function deletePost(postid) {
+    await fetch(`/api/blogposts/${postid}`, {
+      method: "DELETE",
+    });
+  }
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -34,28 +40,27 @@ export default function DropDown({ postid }) {
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="#"
+                <button
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
+                    "block w-full px-4 py-2 text-left text-sm"
                   )}
                 >
                   Edit
-                </a>
+                </button>
               )}
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <a
-                  href="#"
+                <button
+                  onClick={() => deletePost(postid)}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
+                    "block w-full px-4 py-2 text-left text-sm"
                   )}
                 >
                   Delete
-                </a>
+                </button>
               )}
             </Menu.Item>
           </div>

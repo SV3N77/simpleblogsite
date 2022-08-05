@@ -19,7 +19,6 @@ export default function handler(req, res) {
       fs.writeFileSync(filePath, JSON.stringify([...blogposts, newBlogPost]));
       return res.json(newBlogPost);
     }
-
     default:
       res.status(405).json({ error: `Method ${method} not allowed` });
   }

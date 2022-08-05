@@ -5,11 +5,12 @@ export default function PostCard({ post: { id, title, content, image } }) {
   return (
     <div className="relative flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
       <Image
-        className="bg-cover"
+        className="aspect-[4/3] bg-cover"
         src={`/images/${image}`}
         alt={image}
         width={400}
         height={300}
+        priority
       />
       <div className="flex flex-col gap-3 p-5">
         <div className="text-2xl">{title}</div>

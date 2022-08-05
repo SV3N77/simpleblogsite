@@ -13,7 +13,7 @@ export default function PostForm() {
       title,
       content,
     };
-    await fetch("http://localhost:3000/api/blogposts", {
+    await fetch("/api/blogposts", {
       method: "POST",
       body: JSON.stringify(newBlogPost),
     });
