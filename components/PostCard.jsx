@@ -1,8 +1,9 @@
 import Image from "next/future/image";
+import DropDown from "./DropDown";
 
 export default function PostCard({ post: { id, title, content, image } }) {
   return (
-    <div className="flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
+    <div className="relative flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
       <Image
         className="bg-cover"
         src={`/images/${image}`}
@@ -13,6 +14,9 @@ export default function PostCard({ post: { id, title, content, image } }) {
       <div className="flex flex-col gap-3 p-5">
         <div className="text-2xl">{title}</div>
         <div className="grow">{content}</div>
+      </div>
+      <div className="absolute right-2 top-2">
+        <DropDown postid={id} />
       </div>
     </div>
   );
