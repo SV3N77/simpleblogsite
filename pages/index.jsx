@@ -1,4 +1,5 @@
 import Head from "next/head";
+import EditForm from "../components/EditForm";
 import PostCard from "../components/PostCard";
 
 export const getStaticProps = async () => {

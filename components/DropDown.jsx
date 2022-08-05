@@ -5,9 +5,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DropDown({ postid }) {
-  async function deletePost(postid) {
-    await fetch(`/api/blogposts/${postid}`, {
+export default function DropDown({ postId, onEdit }) {
+  async function deletePost(postId) {
+    await fetch(`/api/blogposts/${postId}`, {
       method: "DELETE",
     });
   }
@@ -41,6 +41,7 @@ export default function DropDown({ postid }) {
             <Menu.Item>
               {({ active }) => (
                 <button
+                  onClick={() => onEdit()}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "block w-full px-4 py-2 text-left text-sm"
@@ -53,7 +54,7 @@ export default function DropDown({ postid }) {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => deletePost(postid)}
+                  onClick={() => deletePost(postId)}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "block w-full px-4 py-2 text-left text-sm"
