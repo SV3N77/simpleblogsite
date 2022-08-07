@@ -1,5 +1,4 @@
 import Head from "next/head";
-import EditForm from "../components/EditForm";
 import PostCard from "../components/PostCard";
 
 export const getStaticProps = async () => {
@@ -10,7 +9,7 @@ export const getStaticProps = async () => {
     },
   }).then((res) => res.json());
 
-  return { props: { posts: data } };
+  return { props: { posts: data }, revalidate: 1 };
 };
 
 export default function Home({ posts }) {

@@ -13,7 +13,7 @@ export default function PostCard({ post: { id, title, content, image } }) {
   return isEditing ? (
     <EditForm postId={id} title={title} content={content} image={image} />
   ) : (
-    <div className="relative flex h-80 overflow-hidden rounded-md bg-amber-50 shadow-md">
+    <div className="relative flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
       {image ? (
         <Image
           className="aspect-[4/3] bg-cover"

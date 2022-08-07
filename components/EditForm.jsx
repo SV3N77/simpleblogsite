@@ -3,7 +3,7 @@ import Button from "./Button";
 
 export default function EditForm({ postId, title, content, image }) {
   return (
-    <form className="flex h-80 overflow-hidden rounded-md bg-amber-50 shadow-md">
+    <form className="flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
       {image ? (
         <Image
           className="aspect-[4/3] bg-cover"
@@ -44,7 +44,7 @@ export default function EditForm({ postId, title, content, image }) {
           rows={6}
           placeholder="Content"
         />
-        <div className="flex justify-center">
+        <div className="flex justify-center text-xs">
           <Button>Update Post</Button>
         </div>
       </div>
