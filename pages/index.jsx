@@ -1,18 +1,25 @@
 import Head from "next/head";
 import PostCard from "../components/PostCard";
+import { useQuery } from "@tanstack/react-query";
 
 export const getStaticProps = async () => {
-  const data = await fetch("http://localhost:3000/api/blogposts", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((res) => res.json());
-
-  return { props: { posts: data }, revalidate: 1 };
+  const data = await getBlogposts();
+  return { props: { posts: data } };
 };
 
+async function getBlogposts() {
+  const data = await fetch("http://localhost:3000//api/blogposts").then((res) =>
+    res.json()
+  );
+  return data;
+}
+
 export default function Home({ posts }) {
+  const { data } = useQuery(["posts"], getBlogposts, {
+    initialData: posts,
+    refetchInterval: 5000,
+  });
+
   return (
     <div className="mx-auto my-0">
       <Head>
@@ -22,7 +29,7 @@ export default function Home({ posts }) {
       </Head>
       <section className="container mx-auto flex flex-col gap-5 pt-8">
         <div className="text-2xl">Posts</div>
-        {posts?.map((post) => (
+        {data?.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </section>

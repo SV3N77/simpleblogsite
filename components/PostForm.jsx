@@ -1,21 +1,17 @@
-import Image from "next/future/image";
 import { useState } from "react";
-import Button from "./Button";
 import { useRouter } from "next/router";
+import Image from "next/future/image";
+import Button from "./Button";
 
 export default function PostForm() {
   const router = useRouter();
   const [currentImage, setCurrentImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
   // blog post data sent to api
-  async function postBlogPost({ title, content }) {
-    const newBlogPost = {
-      title,
-      content,
-    };
+  async function postBlogPost(formData) {
     await fetch("/api/blogposts", {
       method: "POST",
-      body: JSON.stringify(newBlogPost),
+      body: formData,
     });
   }
 
@@ -30,8 +26,7 @@ export default function PostForm() {
   function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData);
-    postBlogPost(data);
+    postBlogPost(formData);
     router.push("/");
   }
 
@@ -87,7 +82,12 @@ export default function PostForm() {
             <div className="font-bold uppercase tracking-wide text-gray-700">
               Select Image
             </div>
-            <input type="file" name="myImage" onChange={handleImageChange} />
+            <input
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/apng, image/avif, image/gif, image/jpeg, image/png, image/svg+xml, image/webp"
+            />
           </div>
         </div>
       </div>

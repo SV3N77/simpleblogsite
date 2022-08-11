@@ -1,15 +1,27 @@
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+async function deletePost(postId) {
+  await fetch(`/api/blogposts/${postId}`, {
+    method: "DELETE",
+  });
+}
 export default function DropDown({ postId, onEdit }) {
-  async function deletePost(postId) {
-    await fetch(`/api/blogposts/${postId}`, {
-      method: "DELETE",
-    });
+  const queryClient = useQueryClient();
+
+  const deleteBlogPost = useMutation(deletePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("blogposts");
+    },
+  });
+
+  function handleDelete(postId) {
+    deleteBlogPost.mutate(postId);
   }
 
   return (
@@ -54,7 +66,7 @@ export default function DropDown({ postId, onEdit }) {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={() => deletePost(postId)}
+                  onClick={() => handleDelete(postId)}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "block w-full px-4 py-2 text-left text-sm"

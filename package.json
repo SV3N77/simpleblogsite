@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.6.6",
-    "formidable": "^3.2.4",
+    "@tanstack/react-query": "^4.0.10",
+    "formidable": "^2.0.1",
     "multer": "^1.4.5-lts.1",
     "next": "12.2.3",
     "next-connect": "^0.13.0",
