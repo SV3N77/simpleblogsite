@@ -16,11 +16,11 @@ export default function PostCard({ post: { id, title, content, image } }) {
     <div className="relative flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
       {image ? (
         <Image
-          className="aspect-[4/3] bg-cover"
+          className="aspect-[4/3] w-auto bg-cover"
           src={`/images/${image}`}
           alt={image}
-          width={400}
-          height={300}
+          width={384}
+          height={288}
           priority
         />
       ) : null}

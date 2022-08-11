@@ -10,7 +10,7 @@ export const config = {
 };
 
 export default function handler(req, res) {
-  const { method, url } = req; // gets request method and url
+  const { method } = req; // gets request method and url
   const filePath = path.join(__dirname, "../../../../files/blogposts.json"); // file path to blogposts.json
   const blogposts = JSON.parse(fs.readFileSync(filePath, "utf8"));
   const form = new formidable.IncomingForm({ keepExtensions: true }); // creates new form object
@@ -39,13 +39,6 @@ export default function handler(req, res) {
         fs.writeFileSync(filePath, JSON.stringify(blogposts)); // writes blogposts array to blogposts.json
         return res.status(201).json(newBlogpost); // returns new blogpost
       });
-      // // creates a new blogpost object with the data from the request body
-      // const newBlogPost = {
-      //   id: Math.random().toString(36).slice(2),
-      //   ...JSON.parse(req.body),
-      // };
-      // fs.writeFileSync(filePath, JSON.stringify([...blogposts, newBlogPost])); // writes the new blogpost to the file
-      // return res.json(newBlogPost);
     }
     default:
       res.status(405).json({ error: `Method ${method} not allowed` });

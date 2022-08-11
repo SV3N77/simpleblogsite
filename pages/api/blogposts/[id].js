@@ -13,7 +13,11 @@ export default function handler(req, res) {
       return res.json(blogpost);
     }
     case "DELETE": {
+      const blogPost = blogposts.find((blogpost) => blogpost.id === id); // finds the blogpost with the id from the query string
       const newBlogPosts = blogposts.filter((blogpost) => blogpost.id !== id); // filters out the blogpost with the id from the query string
+      fs.unlinkSync(
+        path.join(__dirname, "../../../../../public/images", blogPost.image) // deletes the image from the public/images folder")
+      ); // deletes the image from the public/images folder
       fs.writeFileSync(filePath, JSON.stringify(newBlogPosts)); // writes the new blogposts to the file
       return res.json(newBlogPosts); // returns the new blogposts
     }
