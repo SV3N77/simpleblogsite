@@ -16,7 +16,7 @@ export default function handler(req, res) {
   const form = new formidable.IncomingForm({
     encoding: "utf-8",
     keepExtensions: true,
-    uploadDir: path.join(__dirname, "../../../../public/images"), // sets upload directory // keeps file extension
+    uploadDir: path.join(__dirname, "../../../../../public/images"), // sets upload directory // keeps file extension
   }); // creates new form object
   // switch statement to handle the different methods of the API
   switch (method) {
@@ -34,6 +34,9 @@ export default function handler(req, res) {
             return res.status(400).json({ error: err }); // returns error if there is one
           }
           const { title, content } = fields; // gets title, content, from fields object
+          if (files.image.size === 0) {
+            return res.status(400).json("No image");
+          }
           const image = files.image.newFilename; // gets image from files object
           const newBlogpost = {
             id: blogPost.id,

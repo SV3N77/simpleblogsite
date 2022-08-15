@@ -24,16 +24,14 @@ export default function PostCard({ post: { id, title, content, image } }) {
     />
   ) : (
     <div className="relative flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
-      {image ? (
-        <Image
-          className="aspect-[4/3] w-auto bg-cover"
-          src={`/images/${image}`}
-          alt={image}
-          width={384}
-          height={288}
-          priority
-        />
-      ) : null}
+      <Image
+        className="aspect-[4/3] w-auto bg-cover"
+        src={`/images/${image}`}
+        alt={image}
+        width={384}
+        height={288}
+        priority
+      />
       <div className="flex flex-col gap-3 p-5">
         <div className="text-2xl">{title}</div>
         <div className="grow">{content}</div>

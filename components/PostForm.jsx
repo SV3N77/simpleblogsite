@@ -88,6 +88,7 @@ export default function PostForm() {
               name="image"
               onChange={handleImageChange}
               accept="image/apng, image/avif, image/gif, image/jpeg, image/png, image/svg+xml, image/webp"
+              required
             />
           </div>
         </div>
