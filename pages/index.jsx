@@ -2,21 +2,13 @@ import Head from "next/head";
 import PostCard from "../components/PostCard";
 import { useQuery } from "@tanstack/react-query";
 
-export const getStaticProps = async () => {
-  const data = await getBlogposts();
-  return { props: { posts: data } };
-};
-
 async function getBlogposts() {
-  const data = await fetch(
-    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/blogposts`
-  ).then((res) => res.json());
+  const data = await fetch("/api/blogposts").then((res) => res.json());
   return data;
 }
 
-export default function Home({ posts }) {
+export default function Home() {
   const { data } = useQuery(["posts"], getBlogposts, {
-    initialData: posts,
     refetchInterval: 5000,
   });
 

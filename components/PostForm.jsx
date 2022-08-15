@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/future/image";
 import Button from "./Button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // blog post data sent to api
 async function postBlogPost(formData) {
@@ -12,9 +13,17 @@ async function postBlogPost(formData) {
 }
 
 export default function PostForm() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [currentImage, setCurrentImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
+
+  const addBlogPost = useMutation(postBlogPost, {
+    onSuccess: () => {
+      router.push("/");
+      queryClient.invalidateQueries("blogposts");
+    },
+  });
 
   function handleImageChange(e) {
     if (e.target.files && e.target.files[0]) {
@@ -27,8 +36,7 @@ export default function PostForm() {
   function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    postBlogPost(formData);
-    router.push("/");
+    addBlogPost.mutate(formData);
   }
 
   return (

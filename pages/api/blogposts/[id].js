@@ -27,7 +27,9 @@ export default function handler(req, res) {
     case "POST":
       {
         const blogPost = blogposts.find((blogpost) => blogpost.id === id); // finds the blogpost with the id from the query string
-
+        // fs.unlinkSync(
+        //   path.join(__dirname, "../../../../../public/images", blogPost.image) // deletes the image from the public/images folder")
+        // ); // deletes the image from the public/images folder
         form.parse(req, (err, fields, files) => {
           // parses form data and files
           if (err) {
