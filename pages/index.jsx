@@ -8,7 +8,7 @@ export const getStaticProps = async () => {
 };
 
 async function getBlogposts() {
-  const data = await fetch("http://simpleblogsite-five/api/blogposts").then(
+  const data = await fetch(`${process.env.VERCEL_URL}/api/blogposts`).then(
     (res) => res.json()
   );
   return data;
