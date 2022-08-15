@@ -8,8 +8,8 @@ export const getStaticProps = async () => {
 };
 
 async function getBlogposts() {
-  const data = await fetch("http://localhost:3000/api/blogposts").then((res) =>
-    res.json()
+  const data = await fetch("http://simpleblogsite-five/api/blogposts").then(
+    (res) => res.json()
   );
   return data;
 }
