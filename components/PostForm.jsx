@@ -3,17 +3,18 @@ import { useRouter } from "next/router";
 import Image from "next/future/image";
 import Button from "./Button";
 
+// blog post data sent to api
+async function postBlogPost(formData) {
+  await fetch("/api/blogposts", {
+    method: "POST",
+    body: formData,
+  });
+}
+
 export default function PostForm() {
   const router = useRouter();
   const [currentImage, setCurrentImage] = useState(null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
-  // blog post data sent to api
-  async function postBlogPost(formData) {
-    await fetch("/api/blogposts", {
-      method: "POST",
-      body: formData,
-    });
-  }
 
   function handleImageChange(e) {
     if (e.target.files && e.target.files[0]) {

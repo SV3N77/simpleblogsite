@@ -1,18 +1,77 @@
 import Image from "next/future/image";
 import Button from "./Button";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function EditForm({ postId, title, content, image }) {
+async function editPost({ id, formData }) {
+  await fetch(`/api/blogposts/${id}`, {
+    method: "POST",
+    body: formData,
+  });
+}
+
+export default function EditForm({
+  postId,
+  title,
+  content,
+  image,
+  doneEditing,
+}) {
+  const queryClient = useQueryClient();
+  const [currentImage, setCurrentImage] = useState(image || null);
+  const [createObjectURL, setCreateObjectURL] = useState(null);
+
+  const editBlogPost = useMutation(editPost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("blogposts");
+    },
+  });
+
+  function handleImageChange(e) {
+    if (e.target.files && e.target.files[0]) {
+      const i = e.target.files[0];
+      setCurrentImage(i);
+      setCreateObjectURL(URL.createObjectURL(i));
+    }
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    editBlogPost.mutate({
+      id: postId,
+      formData,
+    });
+    doneEditing();
+  }
+
   return (
-    <form className="flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
+    <form
+      className="flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md"
+      onSubmit={handleSubmit}
+    >
       {image ? (
-        <Image
-          className="aspect-[4/3] bg-cover"
-          src={`/images/${image}`}
-          alt={image}
-          width={400}
-          height={300}
-          priority
-        />
+        <div className="relative aspect-[4/3] ">
+          <Image
+            className="h-full w-auto bg-cover"
+            src={createObjectURL ? createObjectURL : `/images/${image}`}
+            alt={currentImage ? currentImage.name : ""}
+            width={384}
+            height={288}
+            priority
+          />
+          <div className="absolute left-1/2 bottom-2 -translate-x-1/2 bg-gray-700/50 p-2 text-xs text-white">
+            <div className="font-bold uppercase tracking-wide ">
+              Select Image
+            </div>
+            <input
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/apng, image/avif, image/gif, image/jpeg, image/png, image/svg+xml, image/webp"
+            />
+          </div>
+        </div>
       ) : null}
       <div className="flex w-full flex-col gap-2 p-5">
         <label
@@ -45,7 +104,7 @@ export default function EditForm({ postId, title, content, image }) {
           placeholder="Content"
         />
         <div className="flex justify-center text-xs">
-          <Button>Update Post</Button>
+          <Button type="submit">Update Post</Button>
         </div>
       </div>
     </form>

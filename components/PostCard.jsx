@@ -10,8 +10,18 @@ export default function PostCard({ post: { id, title, content, image } }) {
     setIsEditing(true);
   }
 
+  function doneEditing() {
+    setIsEditing(false);
+  }
+
   return isEditing ? (
-    <EditForm postId={id} title={title} content={content} image={image} />
+    <EditForm
+      postId={id}
+      title={title}
+      content={content}
+      image={image}
+      doneEditing={doneEditing}
+    />
   ) : (
     <div className="relative flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
       {image ? (
