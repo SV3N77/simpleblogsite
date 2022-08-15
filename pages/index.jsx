@@ -9,6 +9,7 @@ async function getBlogposts() {
 
 export default function Home() {
   const { data } = useQuery(["posts"], getBlogposts, {
+    initialData: [],
     refetchInterval: 5000,
   });
 
