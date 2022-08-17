@@ -7,6 +7,9 @@ const nextConfig = {
       allowFutureImage: true,
     },
   },
+  images: {
+    domains: ["firebasestorage.googleapis.com"],
+  },
 };
 
 module.exports = nextConfig;

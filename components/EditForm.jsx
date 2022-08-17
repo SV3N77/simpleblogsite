@@ -2,11 +2,26 @@ import Image from "next/future/image";
 import Button from "./Button";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  storage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "../firebase/firebase.client";
 
-async function editPost({ id, formData }) {
+async function editPost({ id, title, content, image }) {
+  const editedPost = {
+    title,
+    content,
+    image,
+  };
+
   await fetch(`/api/blogposts/${id}`, {
-    method: "POST",
-    body: formData,
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(editedPost),
   });
 }
 
@@ -35,12 +50,41 @@ export default function EditForm({
     }
   }
 
+  function updateBlogPost({ title, content, image }) {
+    const storageRef = ref(storage, `images/${image.name}`);
+    const metadata = {
+      contentType: image.type,
+    };
+    const uploadTask = uploadBytesResumable(storageRef, image, metadata);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        console.log("uploading");
+      },
+      () => {
+        console.log("error");
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          editBlogPost.mutate({
+            id: postId,
+            title: title,
+            content: content,
+            image: downloadURL,
+          });
+        });
+      }
+    );
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    editBlogPost.mutate({
+    updateBlogPost({
       id: postId,
-      formData,
+      title: formData.get("title"),
+      content: formData.get("content"),
+      image: formData.get("image"),
     });
     doneEditing();
   }
@@ -53,7 +97,7 @@ export default function EditForm({
       <div className="relative aspect-[4/3] ">
         <Image
           className="h-full w-auto bg-cover"
-          src={createObjectURL ? createObjectURL : `/images/${image}`}
+          src={createObjectURL ? createObjectURL : `${image}`}
           alt={currentImage ? currentImage.name : ""}
           width={384}
           height={288}
@@ -64,6 +108,7 @@ export default function EditForm({
           <input
             type="file"
             name="image"
+            id="image"
             onChange={handleImageChange}
             accept="image/apng, image/avif, image/gif, image/jpeg, image/png, image/svg+xml, image/webp"
             required

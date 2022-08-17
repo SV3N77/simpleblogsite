@@ -26,7 +26,7 @@ export default function PostCard({ post: { id, title, content, image } }) {
     <div className="relative flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
       <Image
         className="aspect-[4/3] w-auto bg-cover"
-        src={`/images/${image}`}
+        src={image}
         alt={image}
         width={384}
         height={288}

@@ -3,12 +3,26 @@ import { useRouter } from "next/router";
 import Image from "next/future/image";
 import Button from "./Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  storage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "../firebase/firebase.client";
 
 // blog post data sent to api
-async function postBlogPost(formData) {
+async function postBlogPost({ title, content, image }) {
+  const newBlogPost = {
+    title,
+    content,
+    image,
+  };
   await fetch("/api/blogposts", {
     method: "POST",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newBlogPost),
   });
 }
 
@@ -33,10 +47,40 @@ export default function PostForm() {
     }
   }
 
+  function uploadBlogPost({ title, content, image }) {
+    const storageRef = ref(storage, `images/${image.name}`);
+    const metadata = {
+      contentType: image.type,
+    };
+    const uploadTask = uploadBytesResumable(storageRef, image, metadata);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        console.log("uploading");
+      },
+      () => {
+        console.log("error");
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          addBlogPost.mutate({
+            title: title,
+            content: content,
+            image: downloadURL,
+          });
+        });
+      }
+    );
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    addBlogPost.mutate(formData);
+    uploadBlogPost({
+      title: formData.get("title"),
+      content: formData.get("content"),
+      image: formData.get("image"),
+    });
   }
 
   return (
