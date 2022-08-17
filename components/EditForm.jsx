@@ -160,7 +160,7 @@ export default function EditForm({
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokewidth="2"
+              strokeWidth="2"
               d="M6 18L18 6M6 6l12 12"
             ></path>
           </svg>
