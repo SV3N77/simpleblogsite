@@ -3,6 +3,7 @@ import Button from "./Button";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { storage } from "../firebase/firebase.client";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 async function editPost({ id, title, content, image }) {
   const storageRef = ref(storage, `images/${image.name}`);
@@ -41,6 +42,7 @@ export default function EditForm({
   const editBlogPost = useMutation(editPost, {
     onSuccess: () => {
       queryClient.invalidateQueries("blogposts");
+      onEditFinish();
     },
   });
 
@@ -61,12 +63,30 @@ export default function EditForm({
       content: formData.get("content"),
       image: formData.get("image"),
     });
-    onEditFinish();
   }
 
-  return (
+  return editBlogPost.isLoading ? (
+    <div className="flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
+      <div className="flex w-full animate-pulse space-x-4">
+        <div className="h-[288px] w-[384px] bg-slate-200"></div>
+        <div className="flex-1 space-y-6 py-5 px-2">
+          <div className="h-12 rounded bg-slate-200"></div>
+          <div className="space-y-3">
+            <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-2 h-5 rounded bg-slate-200"></div>
+              <div className="col-span-1 h-5 rounded bg-slate-200"></div>
+            </div>
+            <div className="h-5 rounded bg-slate-200"></div>
+            <div className="h-5 rounded bg-slate-200"></div>
+            <div className="h-10 rounded bg-slate-200"></div>
+            <div className="h-5 rounded bg-slate-200"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
     <form
-      className="flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md"
+      className="relative flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md"
       onSubmit={handleSubmit}
     >
       <div className="relative aspect-[4/3] ">
@@ -125,26 +145,27 @@ export default function EditForm({
           <Button type="submit">Update Post</Button>
         </div>
       </div>
+      <div className="absolute right-2 top-2">
+        <button
+          className="text-gray-400 hover:text-gray-600"
+          onClick={onEditFinish}
+        >
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
     </form>
   );
-  // ) : (
-  //   <div className="flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
-  //     <div className="flex w-full animate-pulse space-x-4">
-  //       <div className="h-[288px] w-[384px] bg-slate-200"></div>
-  //       <div className="flex-1 space-y-6 py-5 px-2">
-  //         <div className="h-12 rounded bg-slate-200"></div>
-  //         <div className="space-y-3">
-  //           <div className="grid grid-cols-3 gap-4">
-  //             <div className="col-span-2 h-5 rounded bg-slate-200"></div>
-  //             <div className="col-span-1 h-5 rounded bg-slate-200"></div>
-  //           </div>
-  //           <div className="h-5 rounded bg-slate-200"></div>
-  //           <div className="h-5 rounded bg-slate-200"></div>
-  //           <div className="h-10 rounded bg-slate-200"></div>
-  //           <div className="h-5 rounded bg-slate-200"></div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 }
