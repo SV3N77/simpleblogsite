@@ -2,18 +2,20 @@ import Image from "next/future/image";
 import Button from "./Button";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  storage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "../firebase/firebase.client";
+import { storage } from "../firebase/firebase.client";
 
 async function editPost({ id, title, content, image }) {
+  const storageRef = ref(storage, `images/${image.name}`);
+  const metadata = {
+    contentType: image.type,
+  };
+  const uploadResult = await uploadBytes(storageRef, image, metadata);
+  const imageDownloadURL = await getDownloadURL(uploadResult.ref);
+
   const editedPost = {
     title,
     content,
-    image,
+    image: imageDownloadURL,
   };
 
   await fetch(`/api/blogposts/${id}`, {
@@ -30,12 +32,11 @@ export default function EditForm({
   title,
   content,
   image,
-  doneEditing,
+  onEditFinish,
 }) {
   const queryClient = useQueryClient();
   const [currentImage, setCurrentImage] = useState(image || null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
-  const [isUploading, setIsUploading] = useState(0);
 
   const editBlogPost = useMutation(editPost, {
     onSuccess: () => {
@@ -51,45 +52,16 @@ export default function EditForm({
     }
   }
 
-  function updateBlogPost({ title, content, image }) {
-    const storageRef = ref(storage, `images/${image.name}`);
-    const metadata = {
-      contentType: image.type,
-    };
-    const uploadTask = uploadBytesResumable(storageRef, image, metadata);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setIsUploading(progress);
-        console.log("Upload is " + progress + "% done");
-      },
-      () => {
-        console.log("error");
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          editBlogPost.mutate({
-            id: postId,
-            title: title,
-            content: content,
-            image: downloadURL,
-          });
-        });
-      }
-    );
-  }
-
   function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    updateBlogPost({
+    editBlogPost.mutate({
       id: postId,
       title: formData.get("title"),
       content: formData.get("content"),
       image: formData.get("image"),
     });
-    doneEditing();
+    onEditFinish();
   }
 
   return (

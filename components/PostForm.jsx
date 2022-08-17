@@ -3,19 +3,22 @@ import { useRouter } from "next/router";
 import Image from "next/future/image";
 import Button from "./Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  storage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "../firebase/firebase.client";
+import { storage } from "../firebase/firebase.client";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // blog post data sent to api
 async function postBlogPost({ title, content, image }) {
+  const storageRef = ref(storage, `images/${image.name}`);
+  const metadata = {
+    contentType: image.type,
+  };
+  const uploadResult = await uploadBytes(storageRef, image, metadata);
+  const imageDownloadURL = await getDownloadURL(uploadResult.ref);
+
   const newBlogPost = {
     title,
     content,
-    image,
+    image: imageDownloadURL,
   };
   await fetch("/api/blogposts", {
     method: "POST",
@@ -47,36 +50,10 @@ export default function PostForm() {
     }
   }
 
-  function uploadBlogPost({ title, content, image }) {
-    const storageRef = ref(storage, `images/${image.name}`);
-    const metadata = {
-      contentType: image.type,
-    };
-    const uploadTask = uploadBytesResumable(storageRef, image, metadata);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        console.log("uploading");
-      },
-      () => {
-        console.log("error");
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          addBlogPost.mutate({
-            title: title,
-            content: content,
-            image: downloadURL,
-          });
-        });
-      }
-    );
-  }
-
   function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    uploadBlogPost({
+    addBlogPost.mutate({
       title: formData.get("title"),
       content: formData.get("content"),
       image: formData.get("image"),
@@ -85,7 +62,7 @@ export default function PostForm() {
 
   return (
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
-      <div className="flex gap-10">
+      <fieldset className="flex gap-10" disabled={addBlogPost.isLoading}>
         <div className="flex grow flex-col gap-10">
           <div className="w-full px-3">
             <label
@@ -144,9 +121,11 @@ export default function PostForm() {
             />
           </div>
         </div>
-      </div>
+      </fieldset>
       <div className="flex justify-center">
-        <Button type="submit">Add Post</Button>
+        <Button type="submit" disabled={addBlogPost.isLoading}>
+          Add Post
+        </Button>
       </div>
     </form>
   );

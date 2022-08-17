@@ -10,7 +10,7 @@ export default function PostCard({ post: { id, title, content, image } }) {
     setIsEditing(true);
   }
 
-  function doneEditing() {
+  function onEditFinish() {
     setIsEditing(false);
   }
 
@@ -20,7 +20,7 @@ export default function PostCard({ post: { id, title, content, image } }) {
       title={title}
       content={content}
       image={image}
-      doneEditing={doneEditing}
+      onEditFinish={onEditFinish}
     />
   ) : (
     <div className="relative flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
