@@ -35,6 +35,7 @@ export default function EditForm({
   const queryClient = useQueryClient();
   const [currentImage, setCurrentImage] = useState(image || null);
   const [createObjectURL, setCreateObjectURL] = useState(null);
+  const [isUploading, setIsUploading] = useState(0);
 
   const editBlogPost = useMutation(editPost, {
     onSuccess: () => {
@@ -59,7 +60,9 @@ export default function EditForm({
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        console.log("uploading");
+        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setIsUploading(progress);
+        console.log("Upload is " + progress + "% done");
       },
       () => {
         console.log("error");
@@ -152,4 +155,24 @@ export default function EditForm({
       </div>
     </form>
   );
+  // ) : (
+  //   <div className="flex h-72 overflow-hidden rounded-md bg-amber-50 shadow-md">
+  //     <div className="flex w-full animate-pulse space-x-4">
+  //       <div className="h-[288px] w-[384px] bg-slate-200"></div>
+  //       <div className="flex-1 space-y-6 py-5 px-2">
+  //         <div className="h-12 rounded bg-slate-200"></div>
+  //         <div className="space-y-3">
+  //           <div className="grid grid-cols-3 gap-4">
+  //             <div className="col-span-2 h-5 rounded bg-slate-200"></div>
+  //             <div className="col-span-1 h-5 rounded bg-slate-200"></div>
+  //           </div>
+  //           <div className="h-5 rounded bg-slate-200"></div>
+  //           <div className="h-5 rounded bg-slate-200"></div>
+  //           <div className="h-10 rounded bg-slate-200"></div>
+  //           <div className="h-5 rounded bg-slate-200"></div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 }
