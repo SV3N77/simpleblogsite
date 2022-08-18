@@ -11,7 +11,7 @@ async function editPost({ id, title, content, image }) {
     content,
   };
 
-  if (image) {
+  if (image.size > 0) {
     const storageRef = ref(storage, `images/${image.name}`);
     const metadata = {
       contentType: image.type,
