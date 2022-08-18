@@ -6,19 +6,20 @@ import { storage } from "../firebase/firebase.client";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 async function editPost({ id, title, content, image }) {
-  const storageRef = ref(storage, `images/${image.name}`);
-  const metadata = {
-    contentType: image.type,
-  };
-  const uploadResult = await uploadBytes(storageRef, image, metadata);
-  const imageDownloadURL = await getDownloadURL(uploadResult.ref);
-
   const editedPost = {
     title,
     content,
-    image: imageDownloadURL,
   };
 
+  if (image) {
+    const storageRef = ref(storage, `images/${image.name}`);
+    const metadata = {
+      contentType: image.type,
+    };
+    const uploadResult = await uploadBytes(storageRef, image, metadata);
+    const imageDownloadURL = await getDownloadURL(uploadResult.ref);
+    editedPost.image = imageDownloadURL;
+  }
   await fetch(`/api/blogposts/${id}`, {
     method: "PUT",
     headers: {
@@ -106,7 +107,6 @@ export default function EditForm({
             id="image"
             onChange={handleImageChange}
             accept="image/apng, image/avif, image/gif, image/jpeg, image/png, image/svg+xml, image/webp"
-            required
           />
         </div>
       </div>

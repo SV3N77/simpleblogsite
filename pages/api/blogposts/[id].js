@@ -22,8 +22,10 @@ export default async function handler(req, res) {
       const updatedBlogpost = {
         title,
         content,
-        image,
       };
+      if (image) {
+        updatedBlogpost.image = image;
+      }
       await blogpostRef.update({ ...updatedBlogpost });
       return res.json(updatedBlogpost);
     }
